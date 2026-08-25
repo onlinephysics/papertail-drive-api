@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Admin workspace for uploading course PDFs to Google Drive." />
+    <title>Papertrail · Admin library</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="admin-page">
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="index.html" aria-label="Papertrail home">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span>papertrail</span>
+        </a>
+        <div class="workspace-switcher">
+          <span class="eyebrow">Workspace</span>
+          <strong>Northstar Academy</strong>
+          <span class="online-dot"><i></i> Drive connected</span>
+        </div>
+        <nav class="nav-list" aria-label="Main navigation">
+          <a class="nav-item active" href="#library"><span class="nav-icon">▦</span> Library <span class="nav-count" id="nav-count">0</span></a>
+          <a class="nav-item" href="#upload"><span class="nav-icon">↥</span> Uploads</a>
+          <a class="nav-item" href="#access"><span class="nav-icon">⌁</span> Access</a>
+          <a class="nav-item" href="public.html"><span class="nav-icon">↗</span> Public page</a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="storage-meter">
+            <div class="storage-meter-label"><span>Demo storage</span><strong id="storage-used">0 MB</strong></div>
+            <div class="meter-track"><span id="storage-meter-fill"></span></div>
+            <small>Google Drive folder</small>
+          </div>
+          <a class="help-link" href="README.md"><span>?</span> Setup guide</a>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="breadcrumb"><span>Admin</span><b>/</b><strong>PDF library</strong></div>
+          <div class="topbar-actions">
+            <span class="connection-pill" id="connection-pill"><i></i> Checking connection</span>
+            <button class="avatar" type="button" title="Admin session">AD</button>
+          </div>
+        </header>
+
+        <section class="page-intro" id="library">
+          <div>
+            <p class="eyebrow accent-eyebrow">CONTENT OPERATIONS <span>·</span> AUG 2026</p>
+            <h1>Your teaching library,<br /><em>kept in order.</em></h1>
+            <p class="intro-copy">Upload once, share confidently. PDFs stay in your dedicated Drive folder and can be published to the learning site when you are ready.</p>
+          </div>
+          <div class="intro-meta">
+            <span class="meta-label">Library status</span>
+            <strong id="library-status">Ready for your first upload</strong>
+            <span class="meta-note">Maximum file size: 50 MB</span>
+          </div>
+        </section>
+
+        <section class="stats-grid" aria-label="Library overview">
+          <article class="stat-card"><span class="stat-label">Published PDFs</span><strong id="stat-files">0</strong><span class="stat-foot"><i class="stat-dot green"></i> In your folder</span></article>
+          <article class="stat-card warm"><span class="stat-label">Total storage</span><strong id="stat-storage">0 <small>MB</small></strong><span class="stat-foot"><i class="stat-dot amber"></i> Drive usage</span></article>
+          <article class="stat-card violet"><span class="stat-label">Last upload</span><strong id="stat-last">—</strong><span class="stat-foot"><i class="stat-dot violet-dot"></i> Waiting for activity</span></article>
+        </section>
+
+        <section class="workspace-grid" id="upload">
+          <article class="upload-card">
+            <div class="section-heading"><div><span class="section-kicker">ADD TO LIBRARY</span><h2>Bring in a new PDF</h2></div><span class="file-rule">PDF / 50 MB max</span></div>
+            <div class="drop-zone" id="drop-zone" tabindex="0" role="button" aria-label="Choose a PDF file">
+              <input id="file-input" type="file" accept="application/pdf,.pdf" hidden />
+              <div class="drop-illustration" aria-hidden="true"><span class="paper-back"></span><span class="paper-front">PDF</span><span class="upload-arrow">↑</span></div>
+              <strong>Drop a PDF here</strong>
+              <span>or <button class="inline-button" id="choose-file" type="button">browse your computer</button></span>
+              <small id="file-hint">Only PDF files are accepted · Max 50 MB</small>
+            </div>
+            <div class="selected-file" id="selected-file" hidden>
+              <div class="file-badge">PDF</div><div class="selected-file-copy"><strong id="selected-name">Untitled.pdf</strong><span id="selected-size">0 MB</span></div><button class="icon-button" id="clear-file" type="button" aria-label="Remove selected file">×</button>
+            </div>
+            <div class="upload-controls">
+              <label class="pin-field"><span>Admin PIN</span><input id="admin-pin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Enter PIN to upload" /></label>
+              <label class="visibility-field"><span>Who can view?</span><select id="upload-access-mode"><option value="private">Private · whitelist</option><option value="public">Public · anyone with link</option></select></label>
+              <button class="primary-button" id="upload-button" type="button" disabled><span class="button-icon">↑</span> Upload PDF</button>
+            </div>
+            <div class="progress-wrap" id="progress-wrap" hidden><div class="progress-meta"><span id="progress-label">Uploading…</span><span id="progress-value">0%</span></div><div class="progress-track"><span id="progress-fill"></span></div></div>
+            <div class="status-message" id="status-message" role="status" aria-live="polite"></div>
+          </article>
+
+          <aside class="note-card">
+            <div class="note-top"><span class="note-icon">✦</span><span class="section-kicker">A SMALL NOTE</span></div>
+            <h2>Keep the public page tidy.</h2>
+            <p>Use clear titles and consistent subjects. Your future self — and your students — will thank you.</p>
+            <div class="note-example"><span>GOOD TITLE</span><strong>Algebra · Linear equations</strong><small>Subject · Mathematics</small></div>
+          </aside>
+        </section>
+
+        <section class="library-section">
+          <div class="section-heading library-heading"><div><span class="section-kicker">YOUR FILES</span><h2>Uploaded PDFs <span class="count-badge" id="file-count">0</span></h2></div><button class="secondary-button" id="refresh-button" type="button"><span>↻</span> Refresh</button></div>
+          <div class="table-shell">
+            <div class="table-head"><span>File name</span><span>Size</span><span>Uploaded</span><span>Actions</span></div>
+            <div class="file-list" id="file-list"></div>
+            <div class="empty-state" id="empty-state"><div class="empty-icon">⌁</div><h3>Your library is still quiet.</h3><p>Upload your first PDF above and it will appear here.</p></div>
+          </div>
+        </section>
+
+        <section class="access-section" id="access">
+          <div class="section-heading access-heading"><div><span class="section-kicker">ACCESS CONTROL</span><h2>Who can open private PDFs?</h2></div><span class="file-rule">Drive permissions</span></div>
+          <div class="access-card">
+            <div class="access-view-tabs" role="tablist" aria-label="Access workspace view">
+              <button class="access-view-tab active" type="button" role="tab" aria-selected="true" data-access-view="rules">Access rules</button>
+              <button class="access-view-tab" type="button" role="tab" aria-selected="false" data-access-view="records">Records <span id="records-count">0</span></button>
+              <button class="access-view-tab" type="button" role="tab" aria-selected="false" data-access-view="suggestions">Merge suggestions <span id="suggestions-count">0</span></button>
+            </div>
+            <div id="access-rules-view">
+            <div class="access-tabs" role="tablist" aria-label="PDF access scope">
+              <button class="access-tab active" type="button" role="tab" aria-selected="true" data-access-scope="all"><strong>For all PDFs</strong><span>Apply one rule to the whole folder</span></button>
+              <button class="access-tab" type="button" role="tab" aria-selected="false" data-access-scope="selected"><strong>For selected PDFs</strong><span>Choose several files at once</span></button>
+              <button class="access-tab" type="button" role="tab" aria-selected="false" data-access-scope="file"><strong>For this PDF</strong><span>Change one file only</span></button>
+            </div>
+            <div class="access-panel">
+              <div class="access-panel-copy"><span class="section-kicker">SHARING RULE</span><h3 id="access-scope-title">For all PDFs</h3><p id="access-scope-copy">Choose who can open every PDF currently in your Test-API folder.</p></div>
+              <div class="access-form">
+                <label class="access-mode-field"><span>Visibility</span><select id="access-mode"><option value="private">Private · whitelist only</option><option value="public">Public · anyone with link</option></select></label>
+                <label class="email-field"><span>Whitelist email addresses <small>(one per line or separated by commas)</small></span><textarea id="allowlist-emails" rows="3" placeholder="teacher@example.com\nstudent@example.com"></textarea></label>
+                <label class="access-file-field" id="access-file-picker" hidden><span>Choose PDF</span><select id="access-file-id"></select></label>
+                <div class="access-selected-list" id="access-selected-list" hidden></div>
+                <button class="primary-button access-apply" id="apply-access" type="button"><span>✓</span> Apply access rule</button>
+              </div>
+            </div>
+            <div class="access-footnote"><span>i</span><p><strong>Public</strong> means anyone with the Drive link can view the PDF without signing in. <strong>Private</strong> removes link access and grants viewing only to the email addresses above.</p></div>
+            <div class="status-message" id="access-status" role="status" aria-live="polite"></div>
+            </div>
+            <div class="records-view" id="records-view" hidden>
+              <div class="records-intro"><div><span class="section-kicker">PDF RECORDS</span><h3>One record per PDF.</h3><p>Edit the visibility and viewer list for each file. Changes are written to Google Drive permissions.</p></div><button class="secondary-button" id="records-refresh" type="button">↻ Refresh records</button></div>
+              <div class="records-table" id="records-list"></div>
+              <div class="records-empty" id="records-empty" hidden><span>⌁</span><strong>No PDF records yet.</strong><p>Upload a PDF to create the first access record.</p></div>
+              <div class="status-message" id="records-status" role="status" aria-live="polite"></div>
+            </div>
+            <div class="suggestions-view" id="suggestions-view" hidden>
+              <div class="records-intro"><div><span class="section-kicker">REVIEW QUEUE</span><h3>Similar records worth a look.</h3><p>Suggestions are based on similar file names. Merging combines access rules only; the original PDFs stay separate.</p></div></div>
+              <div class="suggestions-list" id="suggestions-list"></div>
+              <div class="records-empty" id="suggestions-empty" hidden><span>✦</span><strong>No merge suggestions.</strong><p>New similar records will appear here for review.</p></div>
+              <div class="status-message" id="suggestions-status" role="status" aria-live="polite"></div>
+            </div>
+          </div>
+        </section>
+
+        <footer class="page-footer"><span>Papertrail demo · Admin only</span><a href="public.html">See the public example ↗</a></footer>
+      </main>
+    </div>
+    <div class="modal-backdrop" id="modal-backdrop" hidden><div class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button class="modal-close" id="modal-close" type="button" aria-label="Close">×</button><span class="modal-kicker">REMOVE FILE</span><h2 id="modal-title">Delete this PDF?</h2><p id="modal-copy">This removes the file from your Drive folder. The action cannot be undone.</p><div class="modal-actions"><button class="secondary-button" id="modal-cancel" type="button">Keep file</button><button class="danger-button" id="modal-confirm" type="button">Delete PDF</button></div></div></div>
+    <script src="config.js"></script>
+    <script src="admin.js"></script>
+  </body>
+</html>
